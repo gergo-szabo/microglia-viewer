@@ -4,6 +4,7 @@ const Viewer = (() => {
   let _currentFile = null;
   let _channel = 0, _t = 0, _z = 0;
   let _overlayVisible = false;
+  let _masks = "branches,soma,nucleus";
   let _tileInfo = null;
 
   function init(containerId) {
@@ -40,7 +41,9 @@ const Viewer = (() => {
       ? `/api/tiles/${fileId}/overlay`
       : `/api/tiles/${fileId}`;
     const ext = layer === "overlay" ? "png" : "jpg";
-    const extra = `?channel=${channel}&t=${t}&z=${z}`;
+    const extra = layer === "overlay"
+      ? `?channel=${channel}&t=${t}&z=${z}&masks=${_masks}`
+      : `?channel=${channel}&t=${t}&z=${z}`;
     return {
       width: info.width,
       height: info.height,
@@ -114,5 +117,10 @@ const Viewer = (() => {
     }
   }
 
-  return { init, loadFrame, setOverlay, refreshOverlay };
+  function setMasks(masks) {
+    _masks = masks;
+    refreshOverlay();
+  }
+
+  return { init, loadFrame, setOverlay, refreshOverlay, setMasks };
 })();

@@ -34,21 +34,20 @@
         <div id="channel-btns" class="channel-btns"></div>
       </div>
 
-      <div class="ctrl-row">
-        <span class="ctrl-label">Z slice</span>
-        <input type="range" id="z-slider" min="0" max="0" value="0" />
-        <span class="ctrl-value" id="z-val">0</span>
+      <div class="z-block">
+        <span class="ctrl-label" style="width:auto;">Z slice</span>
+        <div class="z-widgets">
+          <button class="step-btn" id="z-dec">&#8722;</button>
+          <input type="range" id="z-slider" min="0" max="0" value="0" />
+          <span class="ctrl-value" id="z-val">0</span>
+          <button class="step-btn" id="z-inc">&#43;</button>
+        </div>
       </div>
 
       <div class="ctrl-row" id="t-row" style="display:none;">
         <span class="ctrl-label">Timepoint</span>
         <input type="range" id="t-slider" min="0" max="0" value="0" />
         <span class="ctrl-value" id="t-val">0</span>
-      </div>
-
-      <div class="toggle-row">
-        <input type="checkbox" id="overlay-toggle" />
-        <label class="toggle-label" for="overlay-toggle">Show segmentation overlay</label>
       </div>
     </div>
 
@@ -76,12 +75,27 @@
       <div class="section-title">Results</div>
       <div id="result-kv-list"></div>
 
-      <div class="graph-tabs" style="margin-top:10px;">
-        <button class="graph-tab active" data-tab="resolution">Resolution</button>
-        <button class="graph-tab" data-tab="correlations">Correlation</button>
-        <button class="graph-tab" data-tab="coherences">Coherence</button>
+      <div id="overlay-controls" style="display:none;margin-top:12px;">
+        <div class="section-title" style="margin-bottom:6px;">Segmentation Overlay</div>
+        <label class="mask-row"><input type="checkbox" id="mask-branches" checked /><span class="mask-dot branches"></span>Branches</label>
+        <label class="mask-row"><input type="checkbox" id="mask-soma" checked /><span class="mask-dot soma"></span>Soma</label>
+        <label class="mask-row"><input type="checkbox" id="mask-nucleus" checked /><span class="mask-dot nucleus"></span>Nucleus</label>
       </div>
-      <img id="graph-img" alt="Analysis graph" />
+
+      <div class="graph-tabs" style="margin-top:12px;">
+        <button class="graph-tab active" data-tab="resolution">
+          <img class="graph-thumb" id="thumb-resolution" alt="" />
+          Resolution
+        </button>
+        <button class="graph-tab" data-tab="correlations">
+          <img class="graph-thumb" id="thumb-correlations" alt="" />
+          Correlation
+        </button>
+        <button class="graph-tab" data-tab="coherences">
+          <img class="graph-thumb" id="thumb-coherences" alt="" />
+          Coherence
+        </button>
+      </div>
     </div>
 
   </aside>
@@ -102,6 +116,15 @@
 
 <!-- Toast -->
 <div id="toast"></div>
+
+<!-- Graph Modal -->
+<div id="graph-modal">
+  <div id="graph-modal-backdrop"></div>
+  <div id="graph-modal-inner">
+    <button id="graph-modal-close">&#x2715;</button>
+    <img id="graph-modal-img" alt="Analysis graph" />
+  </div>
+</div>
 
 <!-- OpenSeadragon -->
 <script src="https://cdn.jsdelivr.net/npm/openseadragon@4.1/build/openseadragon/openseadragon.min.js"></script>

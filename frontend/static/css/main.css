@@ -93,6 +93,14 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .ctrl-row input[type=range] { flex: 1; accent-color: var(--accent2); cursor: pointer; }
 .ctrl-value { width: 32px; text-align: right; font-size: 12px; font-variant-numeric: tabular-nums; }
 
+.z-block { margin-bottom: 10px; }
+.z-widgets { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
+.z-widgets input[type=range] { flex: 1; accent-color: var(--accent2); cursor: pointer; min-width: 0; }
+
+.step-btn { width: 22px; height: 22px; flex-shrink: 0; padding: 0; border-radius: 3px; border: 1px solid var(--border); background: var(--bg3); color: var(--text); cursor: pointer; font-size: 14px; line-height: 1; display: flex; align-items: center; justify-content: center; }
+.step-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+.step-btn:disabled { opacity: .35; cursor: not-allowed; }
+
 .channel-btns { display: flex; gap: 6px; flex-wrap: wrap; }
 .channel-btn {
   padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border);
@@ -100,9 +108,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   transition: background .15s, border-color .15s;
 }
 .channel-btn.active { background: var(--accent2); border-color: var(--accent2); color: #fff; }
-
-.toggle-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.toggle-label { font-size: 12px; color: var(--text2); }
 
 input[type=checkbox] { accent-color: var(--accent2); width: 15px; height: 15px; cursor: pointer; }
 
@@ -129,10 +134,29 @@ input[type=checkbox] { accent-color: var(--accent2); width: 15px; height: 15px; 
 .result-key { color: var(--text2); }
 .result-val { font-weight: 600; font-variant-numeric: tabular-nums; }
 
-.graph-tabs { display: flex; gap: 4px; margin-bottom: 8px; }
-.graph-tab { padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg3); color: var(--text2); cursor: pointer; font-size: 11px; }
+.graph-tabs { display: flex; flex-direction: column; gap: 5px; }
+.graph-tab { display: flex; flex-direction: column; align-items: center; width: 100%; padding: 3px 0; border-radius: 5px; border: 1px solid var(--border); background: var(--bg3); color: var(--text2); cursor: zoom-in; font-size: 10px; text-align: center; transition: border-color .15s, background .15s; overflow: hidden; }
+.graph-tab:hover { background: rgba(255,255,255,.05); }
 .graph-tab.active { border-color: var(--accent2); color: var(--accent2); }
-#graph-img { width: 100%; border-radius: 4px; display: none; }
+.graph-thumb { width: 100%; height: auto; display: block; opacity: 0; transition: opacity .2s; }
+.graph-thumb.loaded { opacity: 1; }
+
+/* Graph modal */
+#graph-modal { display: none; position: fixed; inset: 0; z-index: 2000; align-items: center; justify-content: center; }
+#graph-modal.open { display: flex; }
+#graph-modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.82); }
+#graph-modal-inner { position: relative; max-width: 90vw; max-height: 90vh; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 32px 20px 20px; display: flex; align-items: center; justify-content: center; }
+#graph-modal-img { max-width: 85vw; max-height: 80vh; display: block; border-radius: 4px; }
+#graph-modal-close { position: absolute; top: 8px; right: 10px; background: none; border: none; color: var(--text2); font-size: 18px; cursor: pointer; line-height: 1; padding: 4px 8px; border-radius: 4px; }
+#graph-modal-close:hover { color: var(--text); background: rgba(255,255,255,.08); }
+
+/* Mask legend/toggles */
+.mask-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); cursor: pointer; margin-bottom: 6px; user-select: none; }
+.mask-row input[type=checkbox] { accent-color: var(--accent2); width: 14px; height: 14px; cursor: pointer; flex-shrink: 0; }
+.mask-dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.mask-dot.branches { background: #00cc00; }
+.mask-dot.soma { background: #ff0000; }
+.mask-dot.nucleus { background: #00ffff; }
 
 /* ── Status bar ───────────────────────────────────────── */
 #statusbar {

@@ -3,7 +3,7 @@ from io import BytesIO
 
 import cv2
 import numpy as np
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from fastapi.responses import StreamingResponse
 
 from ..config import Settings
@@ -170,6 +170,7 @@ async def overlay_tile_png(
     channel: int = 0,
     t: int = 0,
     z: int = 0,
+    masks: str = Query(default="branches,soma,nucleus"),
     registry: FileRegistry = Depends(dep_file_registry),
     job_registry: JobRegistry = Depends(dep_job_registry),
     tile_cache: TileCache = Depends(dep_tile_cache),
@@ -188,7 +189,8 @@ async def overlay_tile_png(
     if job is None or job.result is None:
         return Response(content=TRANSPARENT_PNG, media_type="image/png")
 
-    cache_key = (file_id, channel, t, z, level, col, row, "overlay")
+    mask_set = {m.strip() for m in masks.split(",") if m.strip()}
+    cache_key = (file_id, channel, t, z, level, col, row, "overlay", masks)
     cached = tile_cache.get(cache_key)
     if cached is not None:
         return Response(content=cached, media_type="image/png",
@@ -204,7 +206,7 @@ async def overlay_tile_png(
     scale = 2 ** (max_lvl - level)
     tw, th = dzi_utils.tile_output_size(col, row, level, max_lvl, img_w, img_h, settings.TILE_SIZE)
 
-    overlay_full = build_overlay_rgba(seg_result, (img_h, img_w))
+    overlay_full = build_overlay_rgba(seg_result, (img_h, img_w), masks=mask_set)
 
     if scale > 16:
         out_w = max(math.ceil(img_w / scale), 1)
@@ -221,6 +223,8 @@ async def overlay_tile_png(
         if region.shape[:2] != (th, tw):
             region = cv2.resize(region, (tw, th), interpolation=cv2.INTER_NEAREST)
 
+    if region.size == 0:
+        return Response(content=TRANSPARENT_PNG, media_type="image/png")
     png_bytes = encode_png_rgba(region)
     tile_cache.put(cache_key, png_bytes)
     return Response(content=png_bytes, media_type="image/png",

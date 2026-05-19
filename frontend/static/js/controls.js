@@ -23,9 +23,12 @@ const Controls = (() => {
       cb.appendChild(btn);
     });
 
-    // Z slider
+    // Z slider + step buttons
     const zMax = Math.max((fileInfo.sizes.Z || 1) - 1, 0);
-    _setupSlider("z-slider", "z-val", zMax, 0, v => { _z = v; _reload(); });
+    _setupSlider("z-slider", "z-val", zMax, 0, v => { _z = v; _updateZButtons(); _reload(); });
+    _setupStepBtn("z-dec", () => _stepZ(-1));
+    _setupStepBtn("z-inc", () => _stepZ(+1));
+    _updateZButtons();
 
     // T slider
     const tMax = Math.max((fileInfo.sizes.T || 1) - 1, 0);
@@ -33,12 +36,29 @@ const Controls = (() => {
     tRow.style.display = tMax > 0 ? "flex" : "none";
     _setupSlider("t-slider", "t-val", tMax, 0, v => { _t = v; _reload(); });
 
-    // Overlay
-    const ov = document.getElementById("overlay-toggle");
-    ov.checked = false;
-    ov.addEventListener("change", () => Viewer.setOverlay(ov.checked));
-
     _reload();
+  }
+
+  function _stepZ(delta) {
+    const slider = document.getElementById("z-slider");
+    const next = Math.max(0, Math.min(parseInt(slider.max), _z + delta));
+    if (next === _z) return;
+    slider.value = next;
+    document.getElementById("z-val").textContent = next;
+    _z = next;
+    _updateZButtons();
+    _reload();
+  }
+
+  function _updateZButtons() {
+    const slider = document.getElementById("z-slider");
+    document.getElementById("z-dec").disabled = _z <= 0;
+    document.getElementById("z-inc").disabled = _z >= parseInt(slider.max);
+  }
+
+  function _setupStepBtn(id, onClick) {
+    const btn = document.getElementById(id);
+    btn.onclick = onClick;
   }
 
   function _setupSlider(sliderId, valId, max, initial, onChange) {

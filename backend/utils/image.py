@@ -23,14 +23,18 @@ def encode_png_rgba(rgba: np.ndarray) -> bytes:
     return buf.getvalue()
 
 
-def build_overlay_rgba(seg_result: dict, shape: tuple[int, int]) -> np.ndarray:
+def build_overlay_rgba(
+    seg_result: dict,
+    shape: tuple[int, int],
+    masks: set[str] | None = None,
+) -> np.ndarray:
     """Compose RGBA overlay from segmentation masks (branches=green, soma=red, nucleus=cyan)."""
     overlay = np.zeros((*shape, 4), dtype=np.uint8)
-    if "branches" in seg_result and seg_result["branches"] is not None:
+    if (masks is None or "branches" in masks) and seg_result.get("branches") is not None:
         overlay[seg_result["branches"] > 0] = [0, 204, 0, 180]
-    if "soma" in seg_result and seg_result["soma"] is not None:
+    if (masks is None or "soma" in masks) and seg_result.get("soma") is not None:
         overlay[seg_result["soma"] > 0] = [255, 0, 0, 200]
-    if "nucleus" in seg_result and seg_result["nucleus"] is not None:
+    if (masks is None or "nucleus" in masks) and seg_result.get("nucleus") is not None:
         overlay[seg_result["nucleus"] > 0] = [0, 255, 255, 220]
     return overlay
 
