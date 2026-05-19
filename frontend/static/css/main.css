@@ -1,0 +1,161 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #1a1a2e;
+  --bg2: #16213e;
+  --bg3: #0f3460;
+  --accent: #e94560;
+  --accent2: #0f7bdb;
+  --text: #e0e0e0;
+  --text2: #a0a0b0;
+  --border: #2a2a4a;
+  --sidebar-w: 320px;
+}
+
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; font-size: 14px; }
+
+/* ── Layout ───────────────────────────────────────────── */
+#app { display: flex; height: 100vh; overflow: hidden; }
+
+#sidebar {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#viewer-area {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #000;
+}
+
+#osd-container {
+  flex: 1;
+  position: relative;
+}
+
+/* ── Sidebar sections ─────────────────────────────────── */
+.section {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  margin-bottom: 10px;
+}
+
+/* ── Upload ───────────────────────────────────────────── */
+#dropzone {
+  border: 2px dashed var(--border);
+  border-radius: 6px;
+  padding: 20px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+  color: var(--text2);
+  font-size: 13px;
+}
+#dropzone:hover, #dropzone.drag-over { border-color: var(--accent2); background: rgba(15,123,219,.08); }
+#dropzone input[type=file] { display: none; }
+#upload-status { margin-top: 8px; font-size: 12px; color: var(--text2); min-height: 16px; }
+
+/* ── File list ────────────────────────────────────────── */
+.file-item {
+  padding: 8px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 4px;
+  transition: background .15s;
+  position: relative;
+}
+.file-item:hover { background: rgba(255,255,255,.06); }
+.file-item.active { background: rgba(15,123,219,.22); border-left: 3px solid var(--accent2); padding-left: 7px; }
+.file-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+.file-meta { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.file-delete { position: absolute; right: 8px; top: 8px; background: none; border: none; color: var(--text2); cursor: pointer; font-size: 16px; line-height: 1; padding: 2px 5px; border-radius: 3px; }
+.file-delete:hover { color: var(--accent); background: rgba(233,69,96,.15); }
+
+/* ── Controls ─────────────────────────────────────────── */
+.ctrl-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.ctrl-label { width: 60px; font-size: 12px; color: var(--text2); flex-shrink: 0; }
+.ctrl-row input[type=range] { flex: 1; accent-color: var(--accent2); cursor: pointer; }
+.ctrl-value { width: 32px; text-align: right; font-size: 12px; font-variant-numeric: tabular-nums; }
+
+.channel-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.channel-btn {
+  padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border);
+  background: var(--bg3); color: var(--text); cursor: pointer; font-size: 12px;
+  transition: background .15s, border-color .15s;
+}
+.channel-btn.active { background: var(--accent2); border-color: var(--accent2); color: #fff; }
+
+.toggle-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.toggle-label { font-size: 12px; color: var(--text2); }
+
+input[type=checkbox] { accent-color: var(--accent2); width: 15px; height: 15px; cursor: pointer; }
+
+/* ── Run analysis button ──────────────────────────────── */
+#btn-run {
+  width: 100%; padding: 9px; border-radius: 5px;
+  background: var(--accent2); color: #fff; border: none;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: background .15s, opacity .15s;
+}
+#btn-run:hover { background: #1a8fe8; }
+#btn-run:disabled { opacity: .45; cursor: not-allowed; }
+
+/* ── Progress ─────────────────────────────────────────── */
+#progress-wrap { padding: 10px 14px; border-bottom: 1px solid var(--border); display: none; }
+#progress-label { font-size: 11px; color: var(--text2); margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#progress-bar-outer { background: var(--bg3); border-radius: 3px; height: 6px; }
+#progress-bar-inner { background: var(--accent2); height: 6px; border-radius: 3px; width: 0; transition: width .3s; }
+
+/* ── Results ──────────────────────────────────────────── */
+#results-section { display: none; }
+.result-kv { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; border-bottom: 1px solid var(--border); }
+.result-kv:last-child { border-bottom: none; }
+.result-key { color: var(--text2); }
+.result-val { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.graph-tabs { display: flex; gap: 4px; margin-bottom: 8px; }
+.graph-tab { padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg3); color: var(--text2); cursor: pointer; font-size: 11px; }
+.graph-tab.active { border-color: var(--accent2); color: var(--accent2); }
+#graph-img { width: 100%; border-radius: 4px; display: none; }
+
+/* ── Status bar ───────────────────────────────────────── */
+#statusbar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(0,0,0,.6); backdrop-filter: blur(4px);
+  display: flex; align-items: center; padding: 4px 12px;
+  font-size: 11px; color: var(--text2); gap: 14px;
+  pointer-events: none;
+}
+#statusbar span { white-space: nowrap; }
+
+/* ── Scrollbar ────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── Toast ────────────────────────────────────────────── */
+#toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: #222; border: 1px solid var(--border); border-radius: 6px;
+  padding: 10px 16px; max-width: 320px; font-size: 13px;
+  transform: translateY(80px); opacity: 0; transition: all .25s;
+  z-index: 1000;
+}
+#toast.show { transform: translateY(0); opacity: 1; }
+#toast.error { border-color: var(--accent); color: var(--accent); }

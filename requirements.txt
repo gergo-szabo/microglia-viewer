@@ -1,0 +1,15 @@
+fastapi==0.135.2
+uvicorn[standard]==0.42.0
+python-multipart==0.0.27
+pydantic-settings==2.14.1
+sse-starlette>=2.1.0
+nd2>=0.10.0
+dask[array]>=2024.3.0
+scikit-image>=0.24.0
+opencv-python-headless==4.13.0.92
+numpy==2.2.6
+scipy==1.15.3
+Pillow==12.2.0
+matplotlib==3.10.8
+aiofiles==25.1.0
+# Optional: ultralytics>=8.0 for YOLO segmentation backend

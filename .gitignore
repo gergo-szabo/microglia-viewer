@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+.venv
+venv/
+env/
+
+data/
+results/
+
+*.nd2
+*.tif
+*.tiff
+
+.DS_Store
+*.swp

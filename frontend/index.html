@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Microglia Viewer</title>
+  <link rel="stylesheet" href="/static/css/main.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- ── Sidebar ────────────────────────────────────── -->
+  <aside id="sidebar">
+
+    <div class="section">
+      <div class="section-title">Load File</div>
+      <div id="dropzone">
+        <input type="file" id="file-input" accept=".nd2" />
+        <div>Drop .nd2 file here<br><small>or click to browse</small></div>
+      </div>
+      <div id="upload-status"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Files</div>
+      <div id="file-list"><div style="color:var(--text2);font-size:12px;padding:4px 2px;">No files loaded</div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Navigation</div>
+
+      <div style="margin-bottom:8px;">
+        <div class="ctrl-label" style="width:auto;margin-bottom:5px;">Channel</div>
+        <div id="channel-btns" class="channel-btns"></div>
+      </div>
+
+      <div class="ctrl-row">
+        <span class="ctrl-label">Z slice</span>
+        <input type="range" id="z-slider" min="0" max="0" value="0" />
+        <span class="ctrl-value" id="z-val">0</span>
+      </div>
+
+      <div class="ctrl-row" id="t-row" style="display:none;">
+        <span class="ctrl-label">Timepoint</span>
+        <input type="range" id="t-slider" min="0" max="0" value="0" />
+        <span class="ctrl-value" id="t-val">0</span>
+      </div>
+
+      <div class="toggle-row">
+        <input type="checkbox" id="overlay-toggle" />
+        <label class="toggle-label" for="overlay-toggle">Show segmentation overlay</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Analysis</div>
+
+      <div class="ctrl-row" style="margin-bottom:10px;">
+        <span class="ctrl-label">Segmenter</span>
+        <select id="segmenter-select" style="flex:1;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:4px 6px;font-size:12px;"></select>
+      </div>
+
+      <button id="btn-run" disabled>Run Analysis</button>
+    </div>
+
+    <!-- Progress -->
+    <div id="progress-wrap">
+      <div id="progress-label">Ready</div>
+      <div id="progress-bar-outer">
+        <div id="progress-bar-inner"></div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="section" id="results-section">
+      <div class="section-title">Results</div>
+      <div id="result-kv-list"></div>
+
+      <div class="graph-tabs" style="margin-top:10px;">
+        <button class="graph-tab active" data-tab="resolution">Resolution</button>
+        <button class="graph-tab" data-tab="correlations">Correlation</button>
+        <button class="graph-tab" data-tab="coherences">Coherence</button>
+      </div>
+      <img id="graph-img" alt="Analysis graph" />
+    </div>
+
+  </aside>
+
+  <!-- ── Viewer ──────────────────────────────────────── -->
+  <div id="viewer-area">
+    <div id="osd-container"></div>
+
+    <div id="statusbar">
+      <span id="sb-version">Microglia Viewer</span>
+      <span id="sb-dim"></span>
+      <span id="sb-channel"></span>
+      <span id="sb-coord"></span>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- OpenSeadragon -->
+<script src="https://cdn.jsdelivr.net/npm/openseadragon@4.1/build/openseadragon/openseadragon.min.js"></script>
+
+<!-- App modules -->
+<script>
+function Toast() {}
+Toast.show = function(msg, isError) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.className = "show" + (isError ? " error" : "");
+  clearTimeout(Toast._t);
+  Toast._t = setTimeout(() => { el.className = ""; }, isError ? 5000 : 3000);
+};
+</script>
+<script src="/static/js/api.js"></script>
+<script src="/static/js/viewer.js"></script>
+<script src="/static/js/controls.js"></script>
+<script src="/static/js/progress.js"></script>
+<script src="/static/js/graphs.js"></script>
+<script src="/static/js/app.js"></script>
+
+</body>
+</html>
