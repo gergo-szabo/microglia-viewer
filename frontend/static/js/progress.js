@@ -25,6 +25,7 @@ const Progress = (() => {
       bar.style.width = "100%";
       label.textContent = "Complete";
       stop();
+      wrap.style.display = "none";
       onDone && onDone(d.data);
     });
 
@@ -52,6 +53,7 @@ const Progress = (() => {
         bar.style.width = job.progress + "%";
         if (job.status === "complete") {
           clearInterval(iv);
+          wrap.style.display = "none";
           onDone && onDone(await API.getResults(jobId));
         } else if (job.status === "failed") {
           clearInterval(iv);
