@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .config import get_settings
 from .pipeline.segmentation import list_segmenters
+from .pipeline.segmentation.unet import UNetSegmenter
 from .pipeline.segmentation.yolo import YOLOSegmenter
 from .routers.files import router as files_router
 from .routers.jobs import router as jobs_router
@@ -31,6 +32,13 @@ async def lifespan(app: FastAPI):
     app.state.tile_cache = TileCache(maxsize=settings.TILE_CACHE_MAXSIZE)
     app.state.frame_cache = FrameCache(maxsize=settings.FRAME_CACHE_MAXSIZE)
     app.state.executor = ThreadPoolExecutor(max_workers=settings.WORKER_THREADS)
+
+    if settings.UNET_WEIGHTS_PATH:
+        unet = UNetSegmenter()
+        try:
+            unet.load_weights(settings.UNET_WEIGHTS_PATH)
+        except Exception as exc:
+            print(f"[WARN] Could not load UNet weights: {exc}")
 
     if settings.YOLO_WEIGHTS_PATH:
         yolo = YOLOSegmenter()

@@ -17,6 +17,7 @@ class Settings(BaseSettings):
 
     CORS_ORIGINS: list[str] = ["*"]
 
+    UNET_WEIGHTS_PATH: str | None = "backend/models/unet.h5"
     YOLO_WEIGHTS_PATH: str | None = None
 
 

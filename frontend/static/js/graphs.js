@@ -2,11 +2,15 @@ const Graphs = (() => {
   let _jobId = null;
   let _activeTab = "resolution";
 
-  function setJob(jobId) {
+  // Segmenters that expose a distinct nucleus class
+  const _THREE_CLASS_SEGMENTERS = new Set(["automd", "yolo"]);
+
+  function setJob(jobId, result) {
     _jobId = jobId;
     document.getElementById("results-section").style.display = "block";
-    _showOverlayControls();
+    _showOverlayControls(result.segmenter_used);
     _loadThumbs();
+    showResult(result);
   }
 
   function _loadThumbs() {
@@ -32,12 +36,18 @@ const Graphs = (() => {
     }
   }
 
-  function _showOverlayControls() {
+  function _showOverlayControls(segmenterName) {
+    const threeClass = _THREE_CLASS_SEGMENTERS.has(segmenterName);
+    const nucleusRow = document.getElementById("mask-nucleus").closest(".mask-row");
+    nucleusRow.style.display = threeClass ? "" : "none";
+    document.getElementById("mask-nucleus").checked = threeClass;
+
     const el = document.getElementById("overlay-controls");
     el.style.display = "block";
     Viewer.setOverlay(true);
     ["branches", "soma", "nucleus"].forEach(name => {
       const cb = document.getElementById(`mask-${name}`);
+      cb.removeEventListener("change", _onMaskChange);
       cb.addEventListener("change", _onMaskChange);
     });
   }

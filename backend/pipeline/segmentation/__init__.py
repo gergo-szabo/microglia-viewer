@@ -1,8 +1,10 @@
 from .base import SegmentationBackend
 from .automd import AutoMDSegmenter
+from .unet import UNetSegmenter
 from .yolo import YOLOSegmenter
 
 _REGISTRY: dict[str, type[SegmentationBackend]] = {
+    "unet": UNetSegmenter,
     "automd": AutoMDSegmenter,
     "yolo": YOLOSegmenter,
 }

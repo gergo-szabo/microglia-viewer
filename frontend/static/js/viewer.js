@@ -95,13 +95,17 @@ const Viewer = (() => {
     }
   }
 
+  function _clearOverlays() {
+    while (_osd.world.getItemCount() > 1) {
+      _osd.world.removeItem(_osd.world.getItemAt(1));
+    }
+    _overlayLayer = null;
+  }
+
   function _loadOverlay() {
     if (!_osd || !_currentFile || !_tileInfo) return;
     const src = _makeTileSource(_currentFile, _channel, _t, _z, _tileInfo, "overlay");
-    if (_overlayLayer !== null) {
-      _osd.world.removeItem(_osd.world.getItemAt(1));
-      _overlayLayer = null;
-    }
+    _clearOverlays();
     _osd.addTiledImage({
       tileSource: src,
       opacity: 0.75,
@@ -114,18 +118,13 @@ const Viewer = (() => {
     _overlayVisible = visible;
     if (visible && _currentFile) {
       _loadOverlay();
-    } else if (_overlayLayer) {
-      _osd.world.removeItem(_overlayLayer);
-      _overlayLayer = null;
+    } else if (_osd) {
+      _clearOverlays();
     }
   }
 
   function refreshOverlay() {
     if (_overlayVisible && _currentFile) {
-      if (_overlayLayer) {
-        _osd.world.removeItem(_overlayLayer);
-        _overlayLayer = null;
-      }
       _loadOverlay();
     }
   }

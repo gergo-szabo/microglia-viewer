@@ -23,7 +23,7 @@ class JobCreateRequest(BaseModel):
     channel_dapi: int = 0
     channel_alx: int = 1
     t: int = 0
-    segmenter: str = "automd"
+    segmenter: str = "unet"
     segmenter_params: dict = {}
 
 

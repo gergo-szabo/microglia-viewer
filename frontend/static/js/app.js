@@ -107,6 +107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       segSelect.appendChild(opt);
     });
   } catch {}
+  if (segSelect.value) _segmenterName = segSelect.value;
   segSelect.addEventListener("change", () => { _segmenterName = segSelect.value; });
 
   // ── Run analysis ─────────────────────────────────────
@@ -130,8 +131,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         (result) => {
           btnRun.disabled = false;
           Toast.show("Analysis complete");
-          Graphs.setJob(job.id);
-          Graphs.showResult(result);
+          Graphs.setJob(job.id, result);
           Viewer.refreshOverlay();
         },
         (err) => {
