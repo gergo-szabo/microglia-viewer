@@ -183,3 +183,14 @@ input[type=checkbox] { accent-color: var(--accent2); width: 15px; height: 15px; 
 }
 #toast.show { transform: translateY(0); opacity: 1; }
 #toast.error { border-color: var(--accent); color: var(--accent); }
+
+#hunren-logo {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  height: 48px;
+  width: auto;
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 500;
+}
