@@ -58,6 +58,13 @@ const Viewer = (() => {
 
   async function loadFrame(fileId, channel, t, z) {
     if (!_osd) return;
+
+    let savedCenter = null, savedZoom = null;
+    if (_currentFile === fileId && _osd.world.getItemCount() > 0) {
+      savedCenter = _osd.viewport.getCenter();
+      savedZoom = _osd.viewport.getZoom();
+    }
+
     _currentFile = fileId;
     _channel = channel;
     _t = t;
@@ -71,6 +78,12 @@ const Viewer = (() => {
     }
 
     const src = _makeTileSource(fileId, channel, t, z, _tileInfo, "base");
+    if (savedCenter !== null) {
+      _osd.addOnceHandler("open", () => {
+        _osd.viewport.zoomTo(savedZoom, null, true);
+        _osd.viewport.panTo(savedCenter, true);
+      });
+    }
     _osd.open(src);
     _overlayLayer = null;
 
